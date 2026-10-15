@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     
     MODELO_YOLO_PATH: str = "ml/models/yolov8n_plagas.pt"
     MODELO_MOBILENET_PATH: str = "ml/models/mobilenet_v3_enfermedades.onnx"
-    UMBRAL_CONFIANZA: float = 0.45
+    UMBRAL_CONFIANZA: float = 0.35
     UMBRAL_IOU: float = 0.50
     DISPOSITIVO: str = "cpu"
     FPS_MUESTREO_VIDEO: int = 4

@@ -20,3 +20,17 @@ from ultralytics import YOLO
 modelo = YOLO("ml/models/yolov8n_plagas.pt")
 modelo.export(format="onnx", dynamic=True, simplify=True)
 ```
+
+---
+
+## 3. Repositorio de Pesos (Hugging Face)
+
+Los pesos preentrenados del modelo YOLOv8n están almacenados en el repositorio oficial de Hugging Face:
+* **Repositorio:** `https://huggingface.co/DreX09/yolov8n-agrovision-plagas`
+* **Ubicación local esperada:** `ml/models/yolov8n_plagas.pt`
+
+Para descargar los pesos y colocarlos en el entorno local:
+```bash
+# Descarga directa y colocación en el directorio de modelos
+curl -L -o ml/models/yolov8n_plagas.pt https://huggingface.co/DreX09/yolov8n-agrovision-plagas/resolve/main/yolov8n_plagas.pt
+```

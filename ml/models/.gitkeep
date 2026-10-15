@@ -1,0 +1,2 @@
+# Mantener carpeta de modelos versionada en git
+!ml/models/.gitkeep
