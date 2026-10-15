@@ -24,6 +24,31 @@ class DetectorPlagas:
         self.ruta_modelo = ruta_modelo
         self._modelo: Optional[object] = None
 
+    def _descargar_modelo_remoto(self, destino: Path) -> bool:
+        """Descarga los pesos preentrenados del modelo desde Hugging Face si no existen localmente.
+
+        Args:
+            destino: Ruta de almacenamiento local para los pesos del modelo.
+
+        Returns:
+            bool: True si la descarga fue exitosa o ya existía, False en caso de error.
+        """
+        if destino.exists():
+            return True
+
+        url_remota = getattr(settings, "URL_MODELO_HUGGINGFACE", "")
+        if not url_remota:
+            return False
+
+        try:
+            destino.parent.mkdir(parents=True, exist_ok=True)
+            import urllib.request
+
+            urllib.request.urlretrieve(url_remota, str(destino))
+            return destino.exists()
+        except Exception:
+            return False
+
     def cargar_modelo(self) -> None:
         """Carga perezosa del modelo YOLOv8 para optimizar memoria."""
         if self._modelo is not None:
@@ -33,6 +58,9 @@ class DetectorPlagas:
             from ultralytics import YOLO
 
             ruta = Path(self.ruta_modelo)
+            if not ruta.exists():
+                self._descargar_modelo_remoto(ruta)
+
             if ruta.exists():
                 self._modelo = YOLO(str(ruta))
             else:
