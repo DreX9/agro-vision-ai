@@ -1,9 +1,10 @@
 """Punto de entrada del microservicio Agro Vision AI con FastAPI."""
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.core.config import settings
+
 from api.routers import diagnostico_router, salud_router
 from ml.inference.detector_plagas import detector_plagas
 

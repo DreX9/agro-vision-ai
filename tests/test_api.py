@@ -1,8 +1,10 @@
 """Pruebas unitarias para la API de Agro Vision AI."""
 import io
 from pathlib import Path
-from PIL import Image
+
 from fastapi.testclient import TestClient
+from PIL import Image
+
 from api.main import app
 
 client = TestClient(app)

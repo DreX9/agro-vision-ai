@@ -3,7 +3,9 @@ import io
 import time
 from pathlib import Path
 from typing import List, Optional
+
 from PIL import Image, ImageOps
+
 from api.core.config import settings
 from api.schemas.diagnostico_schema import (
     BoundingBoxDto,
@@ -11,8 +13,8 @@ from api.schemas.diagnostico_schema import (
     DiagnosticoRespuestaDto,
 )
 from ml.inference.traductor_plagas import (
-    traducir_clase_a_espanol,
     generar_recomendaciones_agronomicas,
+    traducir_clase_a_espanol,
 )
 
 
@@ -126,11 +128,20 @@ class DetectorPlagas:
             pass
 
         # Generar recomendaciones agronómicas contextualizadas y cálculo de salud foliar
-        estado_general, salud_porcentaje, recomendaciones = generar_recomendaciones_agronomicas(
-            clases_originales
-        )
+        (
+            estado_general,
+            salud_porcentaje,
+            recomendaciones,
+            fichas_tecnicas,
+        ) = generar_recomendaciones_agronomicas(clases_originales)
 
         tiempo_ms = round((time.time() - inicio) * 1000, 2)
+
+        herramientas_unicas: List[str] = []
+        for ficha in fichas_tecnicas:
+            for h in ficha.herramientas_sugeridas:
+                if h not in herramientas_unicas:
+                    herramientas_unicas.append(h)
 
         return DiagnosticoRespuestaDto(
             estado_general=estado_general,
@@ -138,6 +149,8 @@ class DetectorPlagas:
             total_plagas_detectadas=len(detecciones),
             detecciones=detecciones,
             recomendaciones=recomendaciones,
+            herramientas=herramientas_unicas,
+            fichas_tecnicas=fichas_tecnicas,
             tiempo_procesamiento_ms=tiempo_ms,
         )
 

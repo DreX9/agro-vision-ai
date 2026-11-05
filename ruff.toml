@@ -1,0 +1,13 @@
+target-version = "py310"
+line-length = 100
+
+[lint]
+select = ["E", "F", "I", "W"]
+ignore = [
+    "E501",  # Longitud de línea manejada de forma flexible para textos agronómicos
+    "B008",  # Permitir Depends/File/UploadFile en FastAPI
+]
+
+[lint.isort]
+combine-as-imports = true
+

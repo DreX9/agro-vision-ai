@@ -1,6 +1,11 @@
 """Mapeo y traducción canónica de plagas y recomendaciones agronómicas al español."""
 from typing import Dict, List, Set, Tuple
 
+from api.schemas.diagnostico_schema import FichaTecnicaPatologiaDto
+from ml.knowledge.catalogo_fichas import (
+    obtener_ficha_follaje_sano,
+    obtener_fichas_tecnicas,
+)
 
 # Mapeo canónico de las 29 clases del modelo a nombres agronómicos en español
 DICCIONARIO_CLASES_ESPANOL: Dict[str, str] = {
@@ -89,14 +94,16 @@ def es_hoja_saludable(nombre_clase: str) -> bool:
     return clave in CLASES_HOJAS_SANAS
 
 
-def generar_recomendaciones_agronomicas(clases_detectadas: List[str]) -> Tuple[str, float, List[str]]:
-    """Genera el estado, porcentaje de salud y recomendaciones específicas en español.
+def generar_recomendaciones_agronomicas(
+    clases_detectadas: List[str],
+) -> Tuple[str, float, List[str], List[FichaTecnicaPatologiaDto]]:
+    """Genera el estado, porcentaje de salud, recomendaciones y fichas técnicas categorizadas.
 
     Args:
         clases_detectadas: Lista de nombres originales de clases detectadas.
 
     Returns:
-        Tuple con (estado_general, salud_porcentaje, lista_de_recomendaciones).
+        Tuple con (estado_general, salud_porcentaje, lista_de_recomendaciones, fichas_tecnicas).
     """
     if not clases_detectadas:
         return (
@@ -106,6 +113,7 @@ def generar_recomendaciones_agronomicas(clases_detectadas: List[str]) -> Tuple[s
                 "No se observan anomalías o patógenos foliares en el encuadre.",
                 "Mantener el plan de inspección y monitoreo periódico en campo.",
             ],
+            [obtener_ficha_follaje_sano()],
         )
 
     claves = [normalizar_clave_clase(c) for c in clases_detectadas]
@@ -120,6 +128,7 @@ def generar_recomendaciones_agronomicas(clases_detectadas: List[str]) -> Tuple[s
                 "El follaje analizado presenta características de hoja sana y buen vigor vegetativo.",
                 "Continuar con el programa preventivo de riego y nutrición foliar.",
             ],
+            [obtener_ficha_follaje_sano()],
         )
 
     # Diagnóstico con enfermedades activas
@@ -191,4 +200,5 @@ def generar_recomendaciones_agronomicas(clases_detectadas: List[str]) -> Tuple[s
         estado = "CRITICO"
         salud = max(15.0, 50.0 - (total_lesiones * 10.0))
 
-    return (estado, salud, recomendaciones)
+    fichas_tecnicas = obtener_fichas_tecnicas(enfermedades)
+    return (estado, salud, recomendaciones, fichas_tecnicas)

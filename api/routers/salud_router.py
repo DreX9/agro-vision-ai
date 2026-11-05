@@ -1,5 +1,6 @@
 """Rutas de verificación de estado y salud del microservicio."""
 from typing import Dict
+
 from fastapi import APIRouter
 
 router = APIRouter(prefix="/api/v1/salud", tags=["Salud"])

@@ -1,9 +1,9 @@
 """Módulo para convertir las anotaciones de PlantDoc al formato estándar de YOLO."""
 import csv
 import shutil
-import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
+
 from PIL import Image
 
 

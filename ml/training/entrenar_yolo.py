@@ -1,7 +1,5 @@
 """Script para entrenar YOLOv8 con aceleración de GPU NVIDIA (RTX 2060)."""
-import os
 from pathlib import Path
-from typing import Dict, Union
 
 
 def verificar_dispositivo_cuda() -> str:

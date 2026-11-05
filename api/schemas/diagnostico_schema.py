@@ -1,5 +1,6 @@
 """Esquemas Pydantic para intercambio de datos en diagnósticos agronómicos."""
-from typing import List, Optional
+from typing import List
+
 from pydantic import BaseModel, Field
 
 
@@ -18,11 +19,29 @@ class DeteccionPlagaDto(BaseModel):
     caja: BoundingBoxDto = Field(..., description="Ubicación espacial en el frame")
 
 
+class FichaTecnicaPatologiaDto(BaseModel):
+    """Ficha técnica con categorización agronómica completa y herramientas sugeridas."""
+    patologia: str = Field(..., description="Nombre formal o canónico de la patología o afección")
+    accion_inmediata: List[str] = Field(default_factory=list, description="Acciones culturales o mecánicas urgentes")
+    control_biologico: List[str] = Field(default_factory=list, description="Tratamientos orgánicos y biológicos")
+    control_quimico: List[str] = Field(default_factory=list, description="Tratamientos fitosanitarios convencionales")
+    manejo_preventivo: List[str] = Field(default_factory=list, description="Prácticas para evitar recurrencia y propagación")
+    herramientas_sugeridas: List[str] = Field(
+        default_factory=list, description="Herramientas y equipo de protección recomendados para la labor"
+    )
+
+
 class DiagnosticoRespuestaDto(BaseModel):
     """Respuesta completa estructurada del diagnóstico para consumo por el backend."""
     estado_general: str = Field(..., description="Estado general de salud: 'OPTIMO', 'ALERTA' o 'CRITICO'")
     salud_porcentaje: float = Field(..., description="Índice estimado de salud foliar (0% - 100%)")
     total_plagas_detectadas: int = Field(..., description="Cantidad total de detecciones encontradas")
     detecciones: List[DeteccionPlagaDto] = Field(default_factory=list, description="Lista de plagas detectadas")
-    recomendaciones: List[str] = Field(default_factory=list, description="Recomendaciones agronómicas inmediatas")
+    recomendaciones: List[str] = Field(default_factory=list, description="Recomendaciones agronómicas inmediatas resumidas")
+    herramientas: List[str] = Field(
+        default_factory=list, description="Herramientas e insumos sugeridos para erradicación"
+    )
+    fichas_tecnicas: List[FichaTecnicaPatologiaDto] = Field(
+        default_factory=list, description="Fichas técnicas estructuradas por patología identificada"
+    )
     tiempo_procesamiento_ms: float = Field(..., description="Tiempo transcurrido en inferencia")
