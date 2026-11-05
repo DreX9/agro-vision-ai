@@ -4,11 +4,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     """Parámetros de configuración de la aplicación cargados desde entorno."""
-    
+
     PORT: int = 8000
     HOST: str = "0.0.0.0"
     ENVIRONMENT: str = "development"
-    
+
     MODELO_YOLO_PATH: str = "ml/models/yolov8n_plagas.pt"
     MODELO_MOBILENET_PATH: str = "ml/models/mobilenet_v3_enfermedades.onnx"
     URL_MODELO_HUGGINGFACE: str = (

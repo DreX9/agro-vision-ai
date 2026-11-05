@@ -1,5 +1,6 @@
 """Rutas de API para ejecución de diagnósticos de imagen y video."""
-from fastapi import APIRouter, File, UploadFile, HTTPException, status
+from fastapi import APIRouter, File, HTTPException, UploadFile, status
+
 from api.schemas.diagnostico_schema import DiagnosticoRespuestaDto
 from ml.inference.detector_plagas import detector_plagas
 
@@ -20,7 +21,7 @@ async def analizar_imagen(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="El archivo enviado debe ser una imagen válida (JPEG, PNG).",
         )
-    
+
     contenido = await archivo.read()
     return detector_plagas.detectar_en_imagen(contenido)
 
@@ -39,6 +40,6 @@ async def analizar_video(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="El archivo enviado debe ser un video válido (MP4, WebM).",
         )
-    
+
     contenido = await archivo.read()
     return detector_plagas.detectar_en_imagen(contenido)

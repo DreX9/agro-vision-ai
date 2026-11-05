@@ -1,5 +1,4 @@
 """Script para descargar y organizar el dataset PlantDoc en formato YOLO."""
-import os
 import sys
 from pathlib import Path
 from typing import Optional
